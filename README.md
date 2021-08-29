@@ -5,7 +5,7 @@ Licensed under Academic Free License version 3.0
 Review the LICENSE file for further details.
 
 [![CI](https://github.com/ifcaro/Open-PS2-Loader/workflows/CI/badge.svg)](https://github.com/ifcaro/Open-PS2-Loader/actions?query=workflow%3ACI)
-[![Codacy Badge]([![Codacy Badge](https://app.codacy.com/project/badge/Grade/a898a009a97f4adb80291d5b07433bb0)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Doom-modding-e-etc/fds&amp;utm_campaign=Badge_Grade)utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ps2homebrew/Open-PS2-Loader&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge][![Codacy Badge](https://app.codacy.com/project/badge/Grade/a898a009a97f4adb80291d5b07433bb0)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Doom-modding-e-etc/fds&amp;utm_campaign=Badge_Grade)
 [![Discord](https://img.shields.io/discord/652861436992946216?style=flat&logo=Discord)](https://discord.gg/CVFUa9xh6B)
 [![Mega](https://img.shields.io/badge/Mega-%23D90007.svg?style=flat&logo=Mega&logoColor=white)](https://mega.nz/folder/Ndwi1bAK#oLWNhH_g-h0p4BoT4c556A)
 
