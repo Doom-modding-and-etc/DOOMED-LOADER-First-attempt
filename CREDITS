@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------
 
-  Copyright 2009, Ifcaro & jimmikaelkael
+  Copyright 2021, Wolf3s and Wally modder
   Licenced under Academic Free License version 3.0
-  Review OpenPS2Loader README & LICENSE files for further details.
+  Review DOOMED LOADER README & LICENSE files for further details.
 
 -----------------------------------------------------------------------------
 
@@ -18,19 +18,24 @@ Copyright (C) 2009 jimmikaelkael <jimmikaelkael@wanadoo.fr>
 NETLOG module, and other contributions
 Copyright (C) 2009 misfire <misfire@xploderfreax.de>
 
+Based on the fork of Open PS2 Loader
+Copyright (C) 2021 wolf3s and wally modder 
+https://discord.gg/3fYaVthv and https://discord.gg/YncHYxAA
 -----------------------------------------------------------------------------
 
 Main Project developers
-by Ifcaro, volca, jimmikaelkael, polo35, izdubar, hominem.te.esse, SP193
+by Ifcaro, volca, jimmikaelkael, polo35, izdubar, hominem.te.esse, SP193,
+wolf3s and wally modder
 
 Other developers
 by BatRastard, crazyc, dlanor, doctorxyz, reprep, belek666, Maximus32, misfire
 
 UI design
-by Berion
+Berion, Deacon John
 
 Quality Assurance
-by RandQalan, yoshi314, EP, LocalH, lee4, El_Patas, ShaolinAssassin, algol, gledson999, jolek, zero35
+by RandQalan, yoshi314, EP, LocalH, lee4, El_Patas, ShaolinAssassin, algol, gledson999, jolek, zero35,
+wolf3s and wally modder
 
 SMSUTILS, SMSMAP & SMSTCPIP modules
 by Eugene Plotnikov

@@ -795,7 +795,7 @@ struct UIItem diaAbout[] = {
     {UI_BREAK},
 
     {UI_SPACER},
-    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"BatRastard - belek666 - crazyc - dlanor - doctorxyz", -1}}},
+    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"SP193 - AKuHAK - BatRastard - belek666 - bignaux - crazyc - dlanor - doctorxyz - fjtrujy", -1}}},
     {UI_BREAK},
 
     {UI_SPACER},
@@ -803,13 +803,11 @@ struct UIItem diaAbout[] = {
     {UI_BREAK},
 
     {UI_SPACER},
-    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"Maximus32 - misfire - Polo35 - reprep - SP193 - volca", -1}}},
+    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"Maximus32 - misfire - Polo35 - reprep -  uyjulian - volca - Wally modder - Wolf3s", -1}}},
     {UI_BREAK},
 
     {UI_SPACER},
-    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"... and the anonymous ...", -1}}},
-    {UI_BREAK},
-
+    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"...and the anonymous...", -1}}},
     {UI_BREAK},
 
     // Quality Assurance
@@ -817,11 +815,11 @@ struct UIItem diaAbout[] = {
     {UI_BREAK},
 
     {UI_SPACER},
-    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"algol - Berion - El_Patas - EP - gledson999 - jolek - lee4", -1}}},
+    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"Disors - El_Patas - EP - gledson999 - jolek - lee4", -1}}},
     {UI_BREAK},
 
     {UI_SPACER},
-    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"LocalH - RandQalan - ShaolinAssassin - yoshi314 - zero35", -1}}},
+    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"Wally modder - Wolf3s", -1}}},
     {UI_BREAK},
 
     {UI_BREAK},
@@ -845,7 +843,7 @@ struct UIItem diaAbout[] = {
     {UI_BREAK},
     {UI_LABEL, 0, 1, 1, -1, 0, 0, {.label = {NULL, _STR_FORUM_DETAILS}}},
     {UI_SPACER},
-    {UI_LABEL, 0, 1, 1, -1, 0, 0, {.label = {"psx-place.com", -1}}},
+    {UI_LABEL, 0, 1, 1, -1, 0, 0, {.label = {"https://github.com/Doom-modding-e-etc/DOOMED-LOADER", -1}}},
     {UI_BREAK},
 
     // buttons
