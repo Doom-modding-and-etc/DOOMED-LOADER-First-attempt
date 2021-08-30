@@ -1,7 +1,7 @@
-VERSION = 0
+VERSION = 1
 SUBVERSION = 0
-PATCHLEVEL = 1
-EXTRAVERSION = Luan gameplay dev
+PATCHLEVEL = 0
+EXTRAVERSION = dev
 
 # How to DEBUG?
 # Simply type "make <debug mode>" to build OPL with the necessary debugging functionality.
