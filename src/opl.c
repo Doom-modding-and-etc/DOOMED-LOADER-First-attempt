@@ -143,6 +143,7 @@ int gBDMStartMode;
 int gHDDStartMode;
 int gETHStartMode;
 int gAPPStartMode;
+int gWADSGamesstartmode;
 int gEnableFW;
 int gEnableMX4SIO;
 int gAutosort;
@@ -853,6 +854,7 @@ static void _loadConfig()
             configGetInt(configOPL, CONFIG_OPL_HDD_MODE, &gHDDStartMode);
             configGetInt(configOPL, CONFIG_OPL_ETH_MODE, &gETHStartMode);
             configGetInt(configOPL, CONFIG_OPL_APP_MODE, &gAPPStartMode);
+            conf_game(configOPL), CONFIG_OPL_WAD_MODE, &gWADSGamesstartmode);
             configGetInt(configOPL, CONFIG_OPL_ENABLE_FW, &gEnableFW);
             configGetInt(configOPL, CONFIG_OPL_ENABLE_MX4SIO, &gEnableMX4SIO);
             configGetInt(configOPL, CONFIG_OPL_SFX, &gEnableSFX);
@@ -1596,6 +1598,7 @@ static void setDefaults(void)
     gHDDStartMode = START_MODE_DISABLED;
     gETHStartMode = START_MODE_DISABLED;
     gAPPStartMode = START_MODE_DISABLED;
+    gWADSGamesstartmode = START_MODE_DISABLED;
 
     gEnableFW = 0;
     gEnableMX4SIO = 0;
