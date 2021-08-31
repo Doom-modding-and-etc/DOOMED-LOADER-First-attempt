@@ -988,3 +988,26 @@ int sysCheckVMC(const char *prefix, const char *sep, char *name, int createSize,
     }
     return size;
 }
+
+void bdmLoadEXT4Support(int read, int write, float target, char path[512])
+{
+   int EXT4 = 4024;
+   char name;
+   switch (EXT4)
+   {
+       case 'read':
+       {
+          if (read > 4028 && write < read)
+          {
+           sprintf(path, "mass%d:%s/%s", read, gBDMPrefix, name);
+          }
+       }
+    
+
+   }
+  
+
+
+
+
+}

@@ -21,6 +21,7 @@ static char *internalEnglish[LANG_STR_COUNT] = {
     "BDM Games",
     "HDD Games",
     "ETH Games",
+    "Wad games",
     "Apps",
     "Theme",
     "Language",

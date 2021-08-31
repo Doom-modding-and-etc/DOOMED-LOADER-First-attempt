@@ -32,7 +32,6 @@
 #include "include/appsupport.h"
 
 #include "include/cheatman.h"
-
 #include "include/sound.h"
 
 // FIXME: We should not need this function.
