@@ -115,7 +115,6 @@ extern int gBDMStartMode;
 extern int gHDDStartMode;
 extern int gETHStartMode;
 extern int gAPPStartMode;
-extern int gWADSGamesstartmode;
 extern int gEnableFW;
 extern int gEnableMX4SIO;
 
