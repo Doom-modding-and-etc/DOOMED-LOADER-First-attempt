@@ -67,7 +67,6 @@ enum _STR_IDS {
     _STR_HDDMODE,
     _STR_ETHMODE,
     _STR_APPMODE,
-
     _STR_AUTO,
     _STR_MANUAL,
     _STR_STARTNBD,
@@ -283,7 +282,7 @@ enum _STR_IDS {
     _STR_CONTROLLER_SETTINGS,
     _STR_HINT_BDM_START,
     _STR_HINT_BLOCK_DEVICES,
-    
+
     LANG_STR_COUNT
 };
 

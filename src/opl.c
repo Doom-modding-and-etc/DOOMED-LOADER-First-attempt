@@ -1540,8 +1540,8 @@ static void setDefaults(void)
     gOPLPart[0] = '\0';
     gHDDPrefix = "pfs0:";
     gBaseMCDir = "mc?:OPL";
+
     ps2_ip_use_dhcp = 1;
-    
     gETHOpMode = ETH_OP_MODE_AUTO;
     gPCShareAddressIsNetBIOS = 1;
     gPCShareNBAddress[0] = '\0';
@@ -1591,7 +1591,8 @@ static void setDefaults(void)
     gEnableSFX = 0;
     gEnableBootSND = 0;
     gSFXVolume = 80;
-    gBootSndVolume = 80
+    gBootSndVolume = 80;
+
     gBDMStartMode = START_MODE_DISABLED;
     gHDDStartMode = START_MODE_DISABLED;
     gETHStartMode = START_MODE_DISABLED;
