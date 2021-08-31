@@ -67,7 +67,7 @@ enum _STR_IDS {
     _STR_HDDMODE,
     _STR_ETHMODE,
     _STR_APPMODE,
-    _STR_WAD_GAMES,
+
     _STR_AUTO,
     _STR_MANUAL,
     _STR_STARTNBD,
