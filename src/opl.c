@@ -143,7 +143,6 @@ int gBDMStartMode;
 int gHDDStartMode;
 int gETHStartMode;
 int gAPPStartMode;
-int gWADSGamesstartmode = 0;
 int gEnableFW;
 int gEnableMX4SIO;
 int gAutosort;
