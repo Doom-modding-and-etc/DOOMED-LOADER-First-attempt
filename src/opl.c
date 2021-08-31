@@ -854,7 +854,6 @@ static void _loadConfig()
             configGetInt(configOPL, CONFIG_OPL_HDD_MODE, &gHDDStartMode);
             configGetInt(configOPL, CONFIG_OPL_ETH_MODE, &gETHStartMode);
             configGetInt(configOPL, CONFIG_OPL_APP_MODE, &gAPPStartMode);
-            configGetInt(configOPL, CONFIG_OPL_WAD_MODE, &gWADSGamesstartmode);
             configGetInt(configOPL, CONFIG_OPL_ENABLE_FW, &gEnableFW);
             configGetInt(configOPL, CONFIG_OPL_ENABLE_MX4SIO, &gEnableMX4SIO);
             configGetInt(configOPL, CONFIG_OPL_SFX, &gEnableSFX);
@@ -1005,7 +1004,7 @@ static void _saveConfig()
         configSetInt(configOPL, CONFIG_OPL_BDM_MODE, gBDMStartMode);
         configSetInt(configOPL, CONFIG_OPL_HDD_MODE, gHDDStartMode);
         configSetInt(configOPL, CONFIG_OPL_ETH_MODE, gETHStartMode);
-        configGetint(configOPL, CONFIG_OPL_WAD_MODE, &gWADSGamesstartmode);
+
         configSetInt(configOPL, CONFIG_OPL_APP_MODE, gAPPStartMode);
         configSetInt(configOPL, CONFIG_OPL_ENABLE_FW, gEnableFW);
         configSetInt(configOPL, CONFIG_OPL_ENABLE_MX4SIO, gEnableMX4SIO);
@@ -1599,7 +1598,7 @@ static void setDefaults(void)
     gHDDStartMode = START_MODE_DISABLED;
     gETHStartMode = START_MODE_DISABLED;
     gAPPStartMode = START_MODE_DISABLED;
-    gWADSGamesstartmode = START_MODE_DISABLED;
+;
 
     gEnableFW = 0;
     gEnableMX4SIO = 0;
