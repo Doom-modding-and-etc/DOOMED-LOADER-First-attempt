@@ -854,7 +854,7 @@ static void _loadConfig()
             configGetInt(configOPL, CONFIG_OPL_HDD_MODE, &gHDDStartMode);
             configGetInt(configOPL, CONFIG_OPL_ETH_MODE, &gETHStartMode);
             configGetInt(configOPL, CONFIG_OPL_APP_MODE, &gAPPStartMode);
-            conf_game(configOPL), CONFIG_OPL_WAD_MODE, &gWADSGamesstartmode);
+            configGetint(configOPL), CONFIG_OPL_WAD_MODE, &gWADSGamesstartmode);
             configGetInt(configOPL, CONFIG_OPL_ENABLE_FW, &gEnableFW);
             configGetInt(configOPL, CONFIG_OPL_ENABLE_MX4SIO, &gEnableMX4SIO);
             configGetInt(configOPL, CONFIG_OPL_SFX, &gEnableSFX);
