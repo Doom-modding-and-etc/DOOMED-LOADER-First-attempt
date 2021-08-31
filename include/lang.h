@@ -283,6 +283,7 @@ enum _STR_IDS {
     _STR_HINT_BDM_START,
     _STR_HINT_BLOCK_DEVICES,
     _STR_WAD_GAMES,
+    
     LANG_STR_COUNT
 };
 
