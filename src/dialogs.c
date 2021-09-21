@@ -795,11 +795,11 @@ struct UIItem diaAbout[] = {
     {UI_BREAK},
 
     {UI_SPACER},
-    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"Wolf3s - Daniel Santos(relive modding) - BatRastard - dlanor - doctorxyz", -1}}},
+    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"Wolf3s - Daniel Santos(ReLive modding) - BatRastard - dlanor - doctorxyz", -1}}},
     {UI_BREAK},
 
     {UI_SPACER},
-    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"Maximus32 - SP193", -1}}},
+    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"Maximus32 - SP193 - Rick Gaiser - Wally modder - Bignaux Ronan - AKuHAK - KrahJohlito - Parrado - Julian Uy", -1}}},
     {UI_BREAK},
 
     // Quality Assurance
@@ -811,7 +811,7 @@ struct UIItem diaAbout[] = {
     {UI_BREAK},
 
     {UI_SPACER},
-    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"Wally modder", -1}}},
+    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"Wally modder, Wolf3s", -1}}},
     {UI_BREAK},
 
     {UI_BREAK},
