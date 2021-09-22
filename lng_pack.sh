@@ -41,13 +41,13 @@ done < ${LANG_LIST}
 (cat << EOF) > ${BUILD_DIR}/README
 -----------------------------------------------------------------------------
 
-  Copyright 2009-2010, Ifcaro & jimmikaelkael
+  Copyright 2021, Wolf3s and Wally modder
   Licenced under Academic Free License version 3.0
-  Review Open PS2 Loader README & LICENSE files for further details.
+  Review DOOMED LOADER README & LICENSE files for further details.
 
 -----------------------------------------------------------------------------
 
-Open PS2 Loader Official Translations (25 August 2016)
+DOOMED LOADER Official Translations (22 September 2021)
 
 HOW TO INSTALL:
 1. make sure you are running latest OPL
