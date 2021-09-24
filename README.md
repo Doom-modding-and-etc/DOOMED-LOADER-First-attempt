@@ -1,4 +1,4 @@
-# Open PS2 Loader
+# DOOMED-LOADER
 
 Copyright 2013, Ifcaro & jimmikaelkael
 Licensed under Academic Free License version 3.0
