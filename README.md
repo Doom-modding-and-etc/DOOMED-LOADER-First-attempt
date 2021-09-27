@@ -1,4 +1,4 @@
-# Open PS2 Loader
+# DOOMED-LOADER
 
 Copyright 2013, Ifcaro & jimmikaelkael
 Licensed under Academic Free License version 3.0
@@ -7,6 +7,7 @@ Review the LICENSE file for further details.
 [![CI](https://github.com/ifcaro/Open-PS2-Loader/workflows/CI/badge.svg)](https://github.com/ifcaro/Open-PS2-Loader/actions?query=workflow%3ACI)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/a898a009a97f4adb80291d5b07433bb0)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Doom-modding-e-etc/fds&amp;utm_campaign=Badge_Grade)
 [![Discord](https://img.shields.io/discord/652861436992946216?style=flat&logo=Discord)](https://discord.gg/CVFUa9xh6B)
+[![Discord](https://img.shields.io/discord/747568966502842378)](https://discord.gg/2Vq6S8dgkr)
 
 ## Introduction
 
