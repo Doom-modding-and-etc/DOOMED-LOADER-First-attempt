@@ -1,6 +1,7 @@
 #ifndef EXT2_DRIVER_H
 #define	EXT2_DRIVER_H 1
 
+#include <bdm.h>
 //#include <io_common.h>
 #include <ioman.h>
 #include <sys/stat.h>
@@ -190,7 +191,7 @@ struct ext2_super_block {
 
 
 typedef struct ext2_VOLUME {
-    mass_dev* dev;
+    struct block_device* bd;
     struct ext2_super_block *super;
     unsigned int start;
     unsigned int current_buffer;
@@ -326,10 +327,10 @@ struct ext2_dir_entry_2 {
 	char	name[EXT2_NAME_LEN];	/* File name */
 };
 
-extern int _fs_lock(void);
-extern int _fs_unlock(void);
+void _fs_lock(void);
+void _fs_unlock(void);
 
-int ext2_mount(mass_dev* dev, unsigned int start, unsigned int count);
+int ext2_mount(struct block_device* bd);
 int ext2_umount();
 int ext2_fs_close(iop_file_t* fd);
 int ext2_fs_closedir(iop_file_t* fd);
@@ -345,9 +346,6 @@ int ext2_fs_mkdir(iop_file_t *fd, const char *name);
 int ext2_fs_rmdir(iop_file_t *fd, const char *name);
 int ext2_fs_getstat(iop_file_t *fd, const char *name, fio_stat_t *stat);
 int ext2_fs_chstat(iop_file_t *fd, const char *name, fio_stat_t *stat, unsigned int a);
-
-/* mounted ext2 volume */
-ext2_VOLUME *ext2_volume;
 
 
 #endif	/* EXT2_DRIVER_H */

@@ -20,19 +20,20 @@
 #define free(a)         FreeSysMemory((a))
 #endif
 
-#include "usbhd_common.h"
+#include "common.h"
 #include "scache.h"
-#include "mass_stor.h"
-
 #include "ext2fs.h"
 
 
 static unsigned char *ext2_file_sectors;
 
+/* mounted ext2 volume */
+static ext2_VOLUME *ext2_volume = NULL;
+
 
 uint16_t __le16_to_cpu(register uint16_t x) {
     unsigned char tmp[2];
-    
+
     tmp[0]=x & 0xff;
     tmp[1]=(x >> 8);
 
@@ -52,25 +53,21 @@ uint32_t __le32_to_cpu(register uint32_t x) {
 }
 
 
-int READ_SECTOR_INDIRECT(mass_dev* mass_device, unsigned int sector, unsigned char* buffer, int size) {
-    int i, chunks = size / EXT2_SECTOR_SIZE;
-    unsigned char *sbuf;
-    
-    for (i = 0; i < chunks; i++) {
-        READ_SECTOR(mass_device, sector + i, sbuf);
-        memcpy(&buffer[i * EXT2_SECTOR_SIZE], sbuf, EXT2_SECTOR_SIZE);
-    }
-    
+int READ_SECTOR_INDIRECT(struct block_device* bd, unsigned int sector, unsigned char* buffer, int size) {
+    int chunks = size / EXT2_SECTOR_SIZE;
+
+    bd->read(bd, sector, buffer, chunks);
+
     return chunks;
 }
 
 
-void ext2_get_super(mass_dev* dev, struct ext2_super_block *super, unsigned int start) {
+void ext2_get_super(struct block_device* bd, struct ext2_super_block *super, unsigned int start) {
     unsigned char sbuf[EXT2_SECTOR_SIZE];
 
     //printf("ext2_get_super devId: %d\n", dev->devId);
 
-    READ_SECTOR_INDIRECT(dev, start + 2, sbuf, EXT2_SECTOR_SIZE);
+    READ_SECTOR_INDIRECT(bd, start + 2, sbuf, EXT2_SECTOR_SIZE);
     memcpy(super, sbuf, sizeof (struct ext2_super_block));
 
     super->s_inodes_count = __le32_to_cpu(super->s_inodes_count);
@@ -132,9 +129,9 @@ void ext2_get_super(mass_dev* dev, struct ext2_super_block *super, unsigned int 
 void ext2_read_block(register unsigned int fsblock) {
     register off_t physical_sector;
     register int i;
-    
+
     ext2_volume->current_buffer = -1;
-    
+
     //check if block is cached
     for (i = 0; i < ext2_volume->total_buffers; i++) {
         if (ext2_volume->buffer_blocks[i] == fsblock) {
@@ -142,7 +139,7 @@ void ext2_read_block(register unsigned int fsblock) {
             return;
         }
     }
-    
+
     //block not cached, find first free slot
     for (i = 0; i < ext2_volume->total_buffers; i++) {
         if (ext2_volume->buffer_blocks[i] == -1) {
@@ -164,7 +161,7 @@ void ext2_read_block(register unsigned int fsblock) {
 
     physical_sector = fsblock * (EXT2_BLOCK_SIZE(ext2_volume->super) / EXT2_SECTOR_SIZE);
 
-    READ_SECTOR_INDIRECT(ext2_volume->dev, ext2_volume->start + physical_sector, &ext2_volume->buffer[ext2_volume->current_buffer * EXT2_BLOCK_SIZE(ext2_volume->super)], EXT2_BLOCK_SIZE(ext2_volume->super));
+    READ_SECTOR_INDIRECT(ext2_volume->bd, ext2_volume->start + physical_sector, &ext2_volume->buffer[ext2_volume->current_buffer * EXT2_BLOCK_SIZE(ext2_volume->super)], EXT2_BLOCK_SIZE(ext2_volume->super));
 
     ext2_volume->buffer_blocks[ext2_volume->current_buffer] = fsblock;
 }
@@ -185,7 +182,7 @@ int ext2_volume_alloc_buffers(int total_buffers) {
     ext2_volume->current_buffer = 0;
     ext2_volume->total_buffers = total_buffers;
     ext2_volume->buffer_blocks = malloc(sizeof(unsigned int) * ext2_volume->total_buffers);
-    
+
     if (!ext2_volume->buffer_blocks) {
         return 0;
     }
@@ -200,16 +197,16 @@ int ext2_volume_alloc_buffers(int total_buffers) {
 
         return 0;
     }
-    
+
     return total_buffers;
 }
 
 
-int ext2_mount(mass_dev* dev, unsigned int start, unsigned int count) {
+int ext2_mount(struct block_device* bd) {
     struct ext2_super_block *super;
     int i;
 
-    //printf("ext2_mount devId: %d, start: %d, count: %d\n", dev->devId, start, count);
+    //printf("ext2_mount\n");
 
     if (ext2_volume != NULL) {
         return -1;
@@ -219,7 +216,7 @@ int ext2_mount(mass_dev* dev, unsigned int start, unsigned int count) {
     if (super == NULL)
         return -1;
 
-    ext2_get_super(dev, super, start);
+    ext2_get_super(bd, super, bd->sectorOffset);
     if (super->s_magic != EXT2_SUPER_MAGIC) {
         free(super);
         return -1;
@@ -241,17 +238,17 @@ int ext2_mount(mass_dev* dev, unsigned int start, unsigned int count) {
         return -1;
     }
 
-    ext2_volume->dev = dev;
-    ext2_volume->start = start;
+    ext2_volume->bd = bd;
+    ext2_volume->start = bd->sectorOffset;
 
     ext2_read_block(0);
-    
+
     for (i = 0; i < EXT2_MAX_HANDLES; i++) {
         ext2_files[i] = NULL;
         ext2_dirs[i] = NULL;
     }
 
-    return 1;
+    return 0;
 }
 
 
@@ -267,7 +264,7 @@ void ext2_get_group_desc(int group_id, struct ext2_group_desc *gdp)
 {
 	unsigned int block, offset;
 	struct ext2_group_desc *le_gdp;
-        
+
         //printf("ext2_get_group_desc devId: %d, group_id: %d\n", ext2_volume->dev->devId, group_id);
 
 	block = 1 + ext2_volume->super->s_first_data_block;
@@ -306,7 +303,7 @@ unsigned int ext2_get_ino_block_sector(unsigned int ino)
 	block = desc.bg_inode_table;
 	block += ino / (EXT2_BLOCK_SIZE(ext2_volume->super) /
 			EXT2_INODE_SIZE(ext2_volume->super));
-        
+
         block = block * (EXT2_BLOCK_SIZE(ext2_volume->super) / EXT2_SECTOR_SIZE);
 
         return ext2_volume->start + block;
@@ -330,7 +327,7 @@ unsigned int ext2_get_ino_block_offset(unsigned int ino)
 	offset = ino % (EXT2_BLOCK_SIZE(ext2_volume->super) /
 			EXT2_INODE_SIZE(ext2_volume->super));
 	offset *= EXT2_INODE_SIZE(ext2_volume->super);
-        
+
         return offset;
 }
 
@@ -397,7 +394,7 @@ int ext2_get_inode(unsigned int ino, struct ext2_inode *inode)
 			__le16_to_cpu(le_inode->osd2.linux2.l_i_uid_high);
 	inode->osd2.linux2.l_i_gid_high =
 			__le16_to_cpu(le_inode->osd2.linux2.l_i_gid_high);
-        
+
         if (is_root && inode->i_size == 0) {
             //printf("ext2_get_inode root inode has %d size, exiting\n", inode->i_size);
             return -1;
@@ -416,7 +413,7 @@ unsigned int ext2_get_block_addr(struct ext2_inode *inode,
         //printf("ext2_get_block_addr devId: %d, logical: %d\n", ext2_volume->dev->devId, logical);
 
 	/* direct */
-        
+
 	if (logical < EXT2_NDIR_BLOCKS) {
 		physical = inode->i_block[logical];
 		return physical;
@@ -473,7 +470,7 @@ int No_divide(register unsigned long long ullDividend, register unsigned long lo
     register int nQuotient = 0;
     register int nPos = -1;
 
-    while (ullDivisor <  ullDividend) 
+    while (ullDivisor <  ullDividend)
     {
         ullDivisor <<= 1;
         nPos ++;
@@ -485,8 +482,8 @@ int No_divide(register unsigned long long ullDividend, register unsigned long lo
     {
         if (ullDividend >= ullDivisor)
         {
-            nQuotient += (1 << nPos);                        
-            ullDividend -= ullDivisor;  
+            nQuotient += (1 << nPos);
+            ullDividend -= ullDivisor;
         }
 
         ullDivisor >>= 1;
@@ -511,11 +508,11 @@ int ext2_read_data(struct ext2_inode *inode,
         long long real_size;
 
         //printf("ext2_read_data devId: %d, offset: %lu, length: %d\n", ext2_volume->dev->devId, offset, length);
-        
+
 	if (offset == inode->i_size && S_ISDIR(inode->i_mode)) {    //TODO check
             return -1;
         }
-        
+
         real_size = ((unsigned long long)inode->i_dir_acl << 32) | inode->i_size;
         if (offset >= real_size) {
             offset = real_size - 1;
@@ -591,7 +588,7 @@ unsigned int ext2_seek_name(const char *name)
 	struct ext2_dir_entry_2 entry;
 
         //printf("ext2_seek_name devId: %d, name: %s\n", ext2_volume->dev->devId, name);
-        
+
 	ino = EXT2_ROOT_INO;
 	while(1) {
 		while (*name == '/')
@@ -638,7 +635,7 @@ int ext2_lookup_inode_data(const char *pathname, struct ext2_inode *inode) {
     if (ret == -1) {
         return -EIO;
     }
-    
+
     return 1;
 }
 
@@ -779,7 +776,7 @@ int ext2_affect_slot(void **arr, void *ptr, int set) {
                 arr[i] = 0;
                 success = 1;
             }
-        }            
+        }
 
         if (success) {
             //printf("* ext2_affect_slot success arr=%p ptr=%p set=%d\n", arr, ptr, set);
@@ -798,23 +795,23 @@ int ext2_umount() {
 
     if (ext2_volume == NULL)
         return -1;
-    
+
 //    //printf("* ext2_umount devId: %d\n", ext2_volume->dev->devId);
-    
+
     _fs_lock();
 
     free(ext2_volume->super);
     ext2_volume->super = 0;
-    
+
     free(ext2_volume->buffer);
     ext2_volume->buffer = 0;
-    
+
     free(ext2_volume->buffer_blocks);
     ext2_volume->buffer_blocks = 0;
 
     free(ext2_volume);
     ext2_volume = 0;
-    
+
     //free handles
     for (i = 0; i < EXT2_MAX_HANDLES; i++) {
         if (ext2_files[i]) {
@@ -830,7 +827,7 @@ int ext2_umount() {
             free(file);
             ext2_files[i] = 0;
         }
-        
+
         if (ext2_dirs[i]) {
             dir = (ext2_DIR*) ext2_dirs[i];
             if (dir->inode) {
@@ -853,23 +850,23 @@ int ext2_fs_close(iop_file_t* fd) {
     ext2_FILE *file = fd->privdata;
 
     //printf("* ext2_fs_close\n");
-    
+
     _fs_lock();
-    
+
     if (!file) {
         _fs_unlock();
         return -EBADF;
     }
-    
+
     free(file->inode);
     free(file->path);
     free(file);
 
     ext2_affect_slot(ext2_files, fd->privdata, 0);
     fd->privdata = 0;
-    
+
     //printf("* ext2_fs_close success\n");
-    
+
     _fs_unlock();
     return 0;
 }
@@ -885,16 +882,16 @@ int ext2_fs_lseek(iop_file_t* fd, unsigned long long offset, int whence) {
     long long new_offset, real_size;
 
     //printf("* ext2_fs_lseek offset: %lu, whence: %d\n", offset, whence);
-    
+
     _fs_lock();
-    
+
     if (!file) {
         _fs_unlock();
         return -EBADF;
     }
 
     real_size = ((unsigned long long)file->inode->i_dir_acl << 32) | file->inode->i_size;
-    
+
     switch(whence)
     {
     case SEEK_SET:
@@ -931,7 +928,7 @@ int ext2_fs_open(iop_file_t* fd, const char *pathname, int mode) {
     int ret;
 
     //printf("* ext2_fs_open pathname: %s, mode: %d\n", pathname, mode);
-    
+
     _fs_lock();
 
 #ifndef WRITE_SUPPORT
@@ -962,7 +959,7 @@ int ext2_fs_open(iop_file_t* fd, const char *pathname, int mode) {
         free(inode);
         return -ENOMEM;
     }
-    
+
     if (!ext2_affect_slot(ext2_files, file, 1)) {
         _fs_unlock();
         free(inode);
@@ -973,7 +970,7 @@ int ext2_fs_open(iop_file_t* fd, const char *pathname, int mode) {
     file->inode = inode;
     file->offset = 0;
     file->path = strdup(pathname);
-    
+
     fd->privdata = file;
 
     //printf("* ext2_fs_open success pathname: %s\n", pathname);
@@ -1015,7 +1012,7 @@ int ext2_fs_getstat(iop_file_t *fd, const char *pathname, fio_stat_t *stat) {
     int ret;
 
     //printf("* ext2_fs_getstat pathname: %s\n", pathname);
-    
+
     _fs_lock();
 
     inode = (struct ext2_inode*) malloc(sizeof (struct ext2_inode));
@@ -1035,7 +1032,7 @@ int ext2_fs_getstat(iop_file_t *fd, const char *pathname, fio_stat_t *stat) {
     free(inode);
 
     //printf("* ext2_fs_getstat success pathname: %s\n", pathname);
-    
+
     _fs_unlock();
     return 0;
 }
@@ -1048,7 +1045,7 @@ int ext2_fs_dopen(iop_file_t *fd, const char *name) {
     int ret;
 
     //printf("* ext2_fs_dopen name: %s\n", name);
-    
+
     _fs_lock();
 
     inode = (struct ext2_inode*)malloc(sizeof(struct ext2_inode));
@@ -1087,7 +1084,7 @@ int ext2_fs_dopen(iop_file_t *fd, const char *name) {
     dir->index = 0;
 
     fd->privdata = dir;
-    
+
     //printf("* ext2_fs_dopen success name: %s\n", name);
 
     _fs_unlock();
@@ -1101,14 +1098,14 @@ int ext2_fs_read(iop_file_t* fd, void * buffer, int size) {
     int ret;
 
     //printf("* ext2_fs_read size: %d\n", size);
-    
+
     _fs_lock();
-    
+
     if (!file) {
         _fs_unlock();
         return -EBADF;
     }
-    
+
     ret = ext2_read_data(file->inode, file->offset, buffer, size);
     if (ret == -1) {
         _fs_unlock();
@@ -1118,9 +1115,9 @@ int ext2_fs_read(iop_file_t* fd, void * buffer, int size) {
     file->offset += ret;
 
     //printf("* ext2_fs_read success size: %d\n", size);
-    
+
     _fs_unlock();
-    
+
     return ret;
 }
 
@@ -1130,11 +1127,11 @@ int ext2_fs_dread(iop_file_t *fd, fio_dirent_t *buffer) {
     ext2_DIR *dir = fd->privdata;
     struct ext2_dir_entry_2 entry;
     int ret;
-    
+
     //printf("* ext2_fs_dread\n");
-    
+
     _fs_lock();
-    
+
     if (!dir) {
         _fs_unlock();
         //printf("* ext2_fs_dread dir closed?\n");
@@ -1156,7 +1153,7 @@ int ext2_fs_dread(iop_file_t *fd, fio_dirent_t *buffer) {
     strcpy(buffer->name, (const char*) entry.name);
 
     //printf("* ext2_fs_dread success\n");
-    
+
     _fs_unlock();
     return 1;
 }
@@ -1165,11 +1162,11 @@ int ext2_fs_dread(iop_file_t *fd, fio_dirent_t *buffer) {
 //5.
 int ext2_fs_closedir(iop_file_t* fd) {
     ext2_DIR *dir = fd->privdata;
-    
+
     //printf("* ext2_fs_closedir\n");
 
     _fs_lock();
-    
+
     if (!dir) {
         _fs_unlock();
         //printf("* ext2_fs_closedir dir closed?\n");
@@ -1181,9 +1178,9 @@ int ext2_fs_closedir(iop_file_t* fd) {
 
     ext2_affect_slot(ext2_dirs, fd->privdata, 0);
     fd->privdata = 0;
-    
+
     //printf("* ext2_fs_closedir success\n");
-    
+
     _fs_unlock();
     return 0;
 }
@@ -1206,7 +1203,7 @@ int ext2_pack_inode_sectors_map(unsigned char *mapBuff, int mapBuffLen, unsigned
     while (src_entry_addr < mapBuffLen) {
         memcpy(&src_entry, mapBuff + src_entry_addr, 4);
         memcpy(&src_holds, mapBuff + src_entry_addr + 4, 4);
-        
+
         if (!src_entry || !src_holds) {
             break;
         }
@@ -1234,14 +1231,14 @@ int ext2_pack_inode_sectors_map(unsigned char *mapBuff, int mapBuffLen, unsigned
             memcpy(&src_holds2, mapBuff + src_entry_addr2 + 4, 4);
 
             src_entry_addr2 += 8;
-            
+
             if (src_holds2 != src_holds) {
                 break;
             }
 
             dups++;
         }
-        
+
         if (dups > 255) {
             //file too much fragmented
             return -1;
@@ -1270,7 +1267,7 @@ int ext2_pack_inode_sectors_map(unsigned char *mapBuff, int mapBuffLen, unsigned
             while (dups > 0) {
                 memcpy(&src_entry, mapBuff + src_entry_addr, 4);
                 memcpy(&src_holds, mapBuff + src_entry_addr + 4, 4);
-                
+
                 if (!src_entry || !src_holds) {
                     break;
                 }
@@ -1310,21 +1307,21 @@ int ext2_pack_inode_sectors_map(unsigned char *mapBuff, int mapBuffLen, unsigned
 //    register int i;
 //
 //    while (entry_addr < mapBuffLen) {
-//        start_sector = 
-//            (mapBuff + entry_addr)[0] + 
-//            ((mapBuff + entry_addr)[1] << 8) + 
-//            ((mapBuff + entry_addr)[2] << 16) + 
+//        start_sector =
+//            (mapBuff + entry_addr)[0] +
+//            ((mapBuff + entry_addr)[1] << 8) +
+//            ((mapBuff + entry_addr)[2] << 16) +
 //            ((mapBuff + entry_addr)[3] << 24);
 //        entry_addr += 4;
 //
 //        if (same_holds == 0) {
-//            holds = 
-//                (mapBuff + entry_addr)[0] + 
-//                ((mapBuff + entry_addr)[1] << 8) + 
-//                ((mapBuff + entry_addr)[2] << 16) + 
+//            holds =
+//                (mapBuff + entry_addr)[0] +
+//                ((mapBuff + entry_addr)[1] << 8) +
+//                ((mapBuff + entry_addr)[2] << 16) +
 //                ((mapBuff + entry_addr)[3] << 24);
 //            entry_addr += 4;
-//            
+//
 //            if (holds > 0 && (holds & 0x80000000) == 0 && holds % 2 != 0) {
 //                holds++;
 //            }
@@ -1378,7 +1375,7 @@ int ext2_fs_ioctl(iop_file_t *fd, unsigned long request, void *data) {
     //printf("* ext2_fs_ioctl request: %lu\n", request);
 
     _fs_lock();
-    
+
     if (!fd->privdata) {
         _fs_unlock();
         return -EBADF;
@@ -1395,7 +1392,7 @@ int ext2_fs_ioctl(iop_file_t *fd, unsigned long request, void *data) {
             break;
         case IOCTL_GETCLUSTER:
             //printf("* ext2_fs_ioctl IOCTL_GETCLUSTER: %s\n", (char *) data);
-            
+
             inode = (struct ext2_inode*)malloc(sizeof(struct ext2_inode));
             if (inode == NULL) {
                 _fs_unlock();
@@ -1416,18 +1413,18 @@ int ext2_fs_ioctl(iop_file_t *fd, unsigned long request, void *data) {
 
             break;
         case IOCTL_GETDEVSECTORSIZE:
-            ret = mass_stor_sectorsize(ext2_volume->dev);
+            ret = ext2_volume->bd->sectorSize;
             break;
         case 0x1337C0DE:
             ret = 0x83;
             break;
         case IOCTL_CHECKCHAIN:
             //printf("* ext2_fs_ioctl IOCTL_CHECKCHAIN: %s\n", (char *) data);
-            ret = 1;    //by default not fragmented 
+            ret = 1;    //by default not fragmented
             //because ext2 driver will handle fragmentation
             break;
         case IOCTL_DEVID:
-            ret = ext2_volume->dev->devId;
+            ret = ext2_volume->bd->devNr;
             break;
     }
 
@@ -1459,7 +1456,7 @@ int ext2_fs_ioctl(iop_file_t *fd, unsigned long request, void *data) {
                 return 0xffffffff;
             }
             memset(ext2_tmp_file_sectors, 0, EXT2_TMP_SECTORS_BYTES);
-            
+
             if ((entries = ext2_get_inode_sectors_map(inode, ext2_tmp_file_sectors, EXT2_TMP_SECTORS_BYTES)) < 0) {
                 //file is too much fragmented - error
                 _fs_unlock();
@@ -1484,7 +1481,7 @@ int ext2_fs_ioctl(iop_file_t *fd, unsigned long request, void *data) {
 //            }
 //
 //            printf("\n");
-            
+
             ext2_file_sectors = malloc(EXT2_SECTORS_BYTES);
             if (!ext2_file_sectors) {
                 _fs_unlock();
@@ -1517,7 +1514,7 @@ int ext2_fs_ioctl(iop_file_t *fd, unsigned long request, void *data) {
 //            entry_addr = 0;
 //            while (entries > 0) {
 //                memcpy(&start_sector, ext2_file_sectors + entry_addr, 4);
-//                
+//
 //                if ((start_sector & 0x80000000) != 0) {
 //                    //holds struct
 //                    printf("0x%X\n", start_sector);
@@ -1531,8 +1528,8 @@ int ext2_fs_ioctl(iop_file_t *fd, unsigned long request, void *data) {
 //            }
 //            printf("\n");
 
-            
-            
+
+
 //            if ((entries = ext2_pack_inode_sectors_map(inode, ext2_file_sectors, EXT2_SECTORS_BYTES, packed_sectors)) < 0) {
 //                //file is too much fragmented - error
 //                _fs_unlock();
@@ -1559,12 +1556,12 @@ int ext2_fs_ioctl(iop_file_t *fd, unsigned long request, void *data) {
 //                    print_hex_memory(secBuff2, 512);
 //                    break;
 //                }
-//                
+//
 ////                if (secNo >= 1000000) {
 ////                    printf("limit\n");
 ////                    break;
 ////                }
-//                
+//
 //                secNo++;
 //                offset = secNo * 512;
 //            }
@@ -1586,7 +1583,7 @@ int ext2_fs_ioctl(iop_file_t *fd, unsigned long request, void *data) {
 //                    print_hex_memory(secBuff2, 512);
 //                    break;
 //                }
-//                
+//
 //                if (secNo >= 1000000) {
 //                    printf("limit\n");
 //                    break;
