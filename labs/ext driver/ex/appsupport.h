@@ -1,7 +1,7 @@
 #ifndef __APP_SUPPORT_H
 #define __APP_SUPPORT_H
 
-#include "include/iosupport.h"
+#include "iosupport.h"
 
 #define APP_MODE_UPDATE_DELAY 240
 
@@ -12,7 +12,7 @@
 #define APP_CONFIG_TITLE "title"
 #define APP_CONFIG_BOOT  "boot"
 
-#define APP_TITLE_CONFIG_FILE "doomed.cfg"
+#define APP_TITLE_CONFIG_FILE "title.cfg"
 
 typedef struct
 {

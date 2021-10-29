@@ -443,7 +443,7 @@ static void bdmGetAppsPath(char *path, int max)
 
 static void bdmGetLegacyAppsPath(char *path, int max)
 {
-    snprintf(path, max, "%sconf_apps.cfg", bdmPrefix);
+    snprintf(path, max, "%sdoomed_apps.cfg", bdmPrefix);
 }
 
 static void bdmGetLegacyAppsInfo(char *path, int max, char *name)

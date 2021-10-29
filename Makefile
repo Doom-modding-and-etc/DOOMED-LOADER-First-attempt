@@ -1,7 +1,7 @@
 VERSION = 1
 SUBVERSION = 0
 PATCHLEVEL = 0
-EXTRAVERSION = dev
+EXTRAVERSION = Dev
 
 # How to DEBUG?
 # Simply type "make <debug mode>" to build OPL with the necessary debugging functionality.
@@ -22,7 +22,7 @@ EXTRAVERSION = dev
 # You can also specify variables when executing make: "make RTL=1 IGS=1 PADEMU=1"
 
 #Enables/disables Right-To-Left (RTL) language support
-RTL ?= 0
+RTL ?= 1
 
 #Enables/disables In Game Screenshot (IGS). NB: It depends on GSM and IGR to work
 IGS ?= 1
@@ -31,10 +31,10 @@ IGS ?= 1
 PADEMU ?= 1
 
 #Enables/disables building of an edition of OPL that will support the DTL-T10000 (SDK v2.3+)
-DTL_T10000 ?= 0
+DTL_T10000 ?= 1
 
 #Nor stripping neither compressing binary ELF after compiling.
-NOT_PACKED ?= 0
+NOT_PACKED ?= 1
 
 # ======== END OF CONFIGURABLE SECTION. DO NOT MODIFY VARIABLES AFTER THIS POINT!! ========
 DEBUG ?= 0
@@ -54,12 +54,12 @@ ifneq ($(shell test -d .git; echo $$?),0)
 endif
 
 GIT_TAG = $(shell git describe --exact-match --tags 2>/dev/null)
-OPL_VERSION = v$(VERSION).$(SUBVERSION).$(PATCHLEVEL)$(if $(EXTRAVERSION),-$(EXTRAVERSION))-$(REVISION)$(if $(GIT_HASH),-$(GIT_HASH))$(if $(DIRTY),$(DIRTY))$(if $(LOCALVERSION),-$(LOCALVERSION))
+DOOMED-LOADER-VERSION = v$(VERSION).$(SUBVERSION).$(PATCHLEVEL)$(if $(EXTRAVERSION),-$(EXTRAVERSION))-$(REVISION)$(if $(GIT_HASH),-$(GIT_HASH))$(if $(DIRTY),$(DIRTY))$(if $(LOCALVERSION),-$(LOCALVERSION))
 
 ifneq ($(GIT_TAG),)
 ifneq ($(GIT_TAG),latest)
 	# git revision is tagged
-	OPL_VERSION = $(GIT_TAG)$(if $(DIRTY),$(DIRTY))
+	DOOMED-LOADER-VERSION = $(GIT_TAG)$(if $(DIRTY),$(DIRTY))
 endif
 endif
 
@@ -99,15 +99,15 @@ EECORE_OBJS = ee_core.o ioprp.o util.o \
 		hdd_cdvdman.o hdd_hdpro_cdvdman.o cdvdfsv.o \
 		ingame_smstcpip.o smap_ingame.o smbman.o smbinit.o
 
-EE_BIN = opl.elf
-EE_BIN_STRIPPED = opl_stripped.elf
-EE_BIN_PACKED = OPNPS2LD.ELF
-EE_VPKD = OPNPS2LD-$(OPL_VERSION)
+EE_BIN = doomed-loader.elf
+EE_BIN_STRIPPED = doomed_stripped.elf
+EE_BIN_PACKED = DOOMED-LOADER.ELF
+EE_VPKD = DOOMED-LOADER$(DOOMED-LOADER-VERSION)
 EE_SRC_DIR = src/
 EE_OBJS_DIR = obj/
 EE_ASM_DIR = asm/
 
-MAPFILE = opl.map
+MAPFILE = doomed-loader.map
 EE_LDFLAGS += -Wl,-Map,$(MAPFILE)
 
 EE_LIBS = -L$(PS2SDK)/ports/lib -L$(GSKIT)/lib -L./lib -lgskit -ldmakit -lgskit_toolkit -lpoweroff -lfileXio -lpatches -ljpeg_ps2_addons -ljpeg -lpng -lz -ldebug -lm -lmc -lfreetype -lvux -lcdvd -lnetman -lps2ips -laudsrv -lpadx
@@ -189,7 +189,7 @@ else
   SMSTCPIP_INGAME_CFLAGS = INGAME_DRIVER=1
 endif
 
-EE_CFLAGS += -fsingle-precision-constant -DOPL_VERSION=\"$(OPL_VERSION)\"
+EE_CFLAGS += -fsingle-precision-constant -DOPL_VERSION=\"$(DOOMED-LOADER-VERSION)\"
 
 # There are a few places where the config key/value are truncated, so disable these warnings
 EE_CFLAGS += -Wno-format-truncation -Wno-stringop-truncation
@@ -203,7 +203,7 @@ EE_OBJS := $(EE_OBJS:%=$(EE_OBJS_DIR)%)
 ifdef PS2SDK
 
 all:
-	echo "Building Open PS2 Loader $(OPL_VERSION)..."
+	echo "Building DOOMED LOADER $(DOOMED-LOADER-VERSION)..."
 	echo "-Interface"
 ifneq ($(NOT_PACKED),1)
 	$(MAKE) $(EE_BIN_PACKED)
@@ -955,10 +955,11 @@ endif
 ifndef PS2SDK
 ps2sdk-not-setup:
 	@echo "PS2SDK is not setup. Please setup PS2SDK before building this project"
+	@echo "PS2SDK não está instalado. Por favor instale o PS2SDK antes de compilar esse projeto"
 endif
 
-oplversion:
-	@echo $(OPL_VERSION)
+doomed-loader-version:
+	@echo $(DOOMED-LOADER-VERSION)
 
 ifdef PS2SDK
 include $(PS2SDK)/samples/Makefile.pref

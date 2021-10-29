@@ -1,50 +1,49 @@
-# Open PS2 Loader
+[![CI](https://github.com/ifcaro/Open-PS2-Loader/workflows/CI/badge.svg)](https://github.com/ifcaro/Open-PS2-Loader/actions?query=workflow%3ACI)
+[![Discord](https://img.shields.io/discord/747568966502842378)](https://discord.gg/2Vq6S8dgkr)
+[![Discord](https://img.shields.io/discord/652861436992946216?style=flat&logo=Discord)](https://discord.gg/CVFUa9xh6B)
+# DOOMED-LOADER
 
-Copyright 2013, Ifcaro & jimmikaelkael
+Copyright 2021, Wolf3s & Wally modder
 Licensed under Academic Free License version 3.0
 Review the LICENSE file for further details.
 
-[![CI](https://github.com/ifcaro/Open-PS2-Loader/workflows/CI/badge.svg)](https://github.com/ifcaro/Open-PS2-Loader/actions?query=workflow%3ACI)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/a898a009a97f4adb80291d5b07433bb0)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Doom-modding-e-etc/fds&amp;utm_campaign=Badge_Grade)
-[![Discord](https://img.shields.io/discord/652861436992946216?style=flat&logo=Discord)](https://discord.gg/CVFUa9xh6B)
-
 ## Introduction
 
-Open PS2 Loader (OPL) is a 100% Open source game and application loader for
-the PS2 and PS3 units. It supports three categories of devices: USB mass
+DOOMED-LOADER (DML) is a 100% fork of the Open source game and application loader OPEN-PS2-LOADER 
+for the PS2 and PS3 units. It supports three categories of devices: USB mass
 storage devices, SMB shares and the PlayStation 2 HDD unit. USB devices and
 SMB shares support USBExtreme and \*.ISO formats while PS2 HDD supports HDLoader
 format. It's now the most compatible homebrew loader.
 
-OPL is also developed continuously - anyone can contribute improvements to
+DML is also developed continuously - anyone can contribute improvements to
 the project due to its open-source nature.
 
-You can visit the Open PS2 Loader forum at:
+You can visit the DML forum at:
 
-<https://www.psx-place.com/forums/open-ps2-loader-opl.77/>
+[https://www.psx-place.com/forums/open-ps2-loader-opl.77/](https://www.psx-place.com/forums/open-ps2-loader-opl.77/)
 
 You can report compatibility game problems at:
 
-<https://www.psx-place.com/threads/open-ps2-loader-game-bug-reports.19401/>
+[https://www.psx-place.com/threads/open-ps2-loader-game-bug-reports.19401/](https://www.psx-place.com/threads/open-ps2-loader-game-bug-reports.19401/)
 
 For an updated compatibility list, you can visit the OPL-CL site at:
 
-<http://sx.sytes.net/oplcl/games.aspx>
+[http://sx.sytes.net/oplcl/games.aspx](http://sx.sytes.net/oplcl/games.aspx)
 
 <details>
   <summary> <b> Release types </b> </summary>
 <p>
 
-Open PS2 Loader bundle included several types of the same OPL version. These
+DOOMED-LOADER bundle included several types of the same OPL version. These
 types come with more or fewer features included.
 
 | Type (can be a combination) | Description                                                                             |
 | --------------------------- | --------------------------------------------------------------------------------------- |
-| `Release`                   | Regular OPL release with GSM, IGS, PADEMU, VMC, PS2RD Cheat Engine & Parental Controls. |
-| `DTL_T10000`                | OPL for TOOLs (DevKit PS2)                                                              |
-| `IGS`                       | OPL with InGame Screenshot feature.                                                     |
-| `PADEMU`                    | OPL with Pad Emulation for DS3 & DS4.                                                   |
-| `RTL`                       | OPL with the right to left language support.                                            |
+| `Release`                 | Regular OPL release with GSM, IGS, PADEMU, VMC, PS2RD Cheat Engine & Parental Controls. |
+| `DTL_T10000`              | OPL for TOOLs (DevKit PS2)                                                              |
+| `IGS`                     | OPL with InGame Screenshot feature.                                                     |
+| `PADEMU`                  | OPL with Pad Emulation for DS3 & DS4.                                                   |
+| `RTL`                     | OPL with the right to left language support.                                            |
 
 </p>
 </details>
@@ -53,21 +52,21 @@ types come with more or fewer features included.
   <summary> <b> How to use </b> </summary>
 <p>
 
-OPL uses the following directory tree structure across HDD, SMB, and
+DML uses the following directory tree structure across HDD, SMB, and
 USB modes:
 
-| Folder | Description                                          | Modes       |
-| ------ | ---------------------------------------------------- | ----------- |
-| `CD`   | for games on CD media - i.e. blue-bottom discs       | USB and SMB |
-| `DVD`  | for DVD5 and DVD9 images if using the NTFS file system on USB or SMB; DVD9 images must be split and placed into the device root if using the FAT32 file system on USB or SMB | USB and SMB |
-| `VMC`  | for Virtual Memory Card images - from 8MB up to 64MB | all         |
-| `CFG`  | for saving per-game configuration files              | all         |
-| `ART`  | for game art images                                  | all         |
-| `THM`  | for themes support                                   | all         |
-| `LNG`  | for translation support                              | all         |
-| `CHT`  | for cheats files                                     | all         |
+| Folder  | Description                                                                                                                                                                  | Modes       |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `CD`  | for games on CD media - i.e. blue-bottom discs                                                                                                                               | USB and SMB |
+| `DVD` | for DVD5 and DVD9 images if using the NTFS file system on USB or SMB; DVD9 images must be split and placed into the device root if using the FAT32 file system on USB or SMB | USB and SMB |
+| `VMC` | for Virtual Memory Card images - from 8MB up to 64MB                                                                                                                         | all         |
+| `CFG` | for saving per-game configuration files                                                                                                                                      | all         |
+| `ART` | for game art images                                                                                                                                                          | all         |
+| `THM` | for themes support                                                                                                                                                           | all         |
+| `LNG` | for translation support                                                                                                                                                      | all         |
+| `CHT` | for cheats files                                                                                                                                                             | all         |
 
-OPL will automatically create the above directory structure the first time you launch it and enable your favorite device.
+DML will automatically create the above directory structure the first time you launch it and enable your favorite device.
 
 For HDD users, OPL will read hdd0:\_\_common/OPL/conf_hdd.cfg for the config entry "hdd_partition" to use as your OPL partition.
 If not found a config file and a 128Mb +OPL partition will be created. You can edit the config if you wish to use/create a different partition.
@@ -126,9 +125,9 @@ executable elf.
 On PS3, you need an original SwapMagic 3.6+ or 3.8 disc (at the moment
 there aren't any other options). The steps for loading OPL on a PS3 are:
 
-1.  Rename OPNPS2LD.ELF to SMBOOT0.ELF
-2.  Make a folder in the root of a USB device called SWAPMAGIC and copy SMBOOT0.ELF to it.
-3.  Launch SwapMagic in PS3 and press UP+L1 then Open PS2 Loader should start.
+1. Rename OPNPS2LD.ELF to SMBOOT0.ELF
+2. Make a folder in the root of a USB device called SWAPMAGIC and copy SMBOOT0.ELF to it.
+3. Launch SwapMagic in PS3 and press UP+L1 then Open PS2 Loader should start.
 
 There are 4 forms for launching elfs in SwapMagic.
 
@@ -146,16 +145,7 @@ Note: on PS3, only USB and SMB modes are supported.
   <summary> <b> Some notes for DEVS </b> </summary>
 <p>
 
-Open PS2 Loader needs the [**latest PS2SDK**](https://github.com/ps2dev/ps2sdk)
-
-</p>
-</details>
-
-<details>
-  <summary> <b> OPL Archive </b> </summary>
-<p>
-
-Since 05/07/2021 every OPL build dispatched to the release section of this repository will be uploaded to a mega account, you can access the archive by clicking the mega badge on top of this readme
+DOOMED-LOADER needs the [**latest PS2SDK**](https://github.com/ps2dev/ps2sdk)
 
 </p>
 </details>

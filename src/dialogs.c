@@ -799,11 +799,15 @@ struct UIItem diaAbout[] = {
     {UI_BREAK},
 
     {UI_SPACER},
-    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"hominem.te.esse - ifcaro - izdubar - jimmikaelkael - Maximus32", -1}}},
+    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"hominem.te.esse - ifcaro - izdubar - jimmikaelkael", -1}}},
     {UI_BREAK},
 
     {UI_SPACER},
-    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"misfire - Polo35 - reprep -  uyjulian - volca - Wolf3s", -1}}},
+    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"Maximus32 - misfire - Polo35 - reprep -  uyjulian - volca - Wally modder - Wolf3s", -1}}},
+    {UI_BREAK},
+
+    {UI_SPACER},
+    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"...and the anonymous...", -1}}},
     {UI_BREAK},
 
     // Quality Assurance
@@ -811,11 +815,11 @@ struct UIItem diaAbout[] = {
     {UI_BREAK},
 
     {UI_SPACER},
-    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"algol - Berion - Disors - El_Patas - EP - gledson999 - jolek - lee4", -1}}},
+    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"Disors - El_Patas - EP - gledson999 - jolek - lee4", -1}}},
     {UI_BREAK},
 
     {UI_SPACER},
-    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"LocalH - RandQalan - ShaolinAssassin - yoshi314 - Wally modder - zero35", -1}}},
+    {UI_LABEL, 0, 1, 1, -1, 0, 15, {.label = {"Wally modder - Wolf3s", -1}}},
     {UI_BREAK},
 
     {UI_BREAK},
@@ -839,7 +843,7 @@ struct UIItem diaAbout[] = {
     {UI_BREAK},
     {UI_LABEL, 0, 1, 1, -1, 0, 0, {.label = {NULL, _STR_FORUM_DETAILS}}},
     {UI_SPACER},
-    {UI_LABEL, 0, 1, 1, -1, 0, 0, {.label = {"https://github.com/Doom-modding-e-etc/DOOMED-LOADER and ", -1}}},
+    {UI_LABEL, 0, 1, 1, -1, 0, 0, {.label = {"https://github.com/Doom-modding-e-etc/DOOMED-LOADER", -1}}},
     {UI_BREAK},
 
     // buttons
